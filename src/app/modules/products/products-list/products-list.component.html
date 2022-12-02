@@ -1,0 +1,40 @@
+<div class="page_list_container">
+  <main class="page_list_content">
+    <h1>{{ header }}</h1>
+    <ul *ngIf="items?.length! > 0; else noItems">
+      <li *ngFor="let item of items; trackBy: trackByFn">
+        {{ item.name }}
+        {{ item.unitPrice }}
+        {{ item.supplier.companyName }}
+        {{ item.category.name }}
+        <button type="button" [routerLink]="[item.productID]">go</button>
+      </li>
+    </ul>
+    <ng-template #noItems>
+      <app-no-items></app-no-items>
+    </ng-template>
+
+    <div
+      class="pagination"
+      *ngIf="paginatedData.hasPreviousPage || paginatedData.hasNextPage"
+    >
+      <button
+        *ngIf="paginatedData.hasPreviousPage"
+        (click)="goToPage(prevPage)"
+        type="button"
+        class="btn_prev"
+      ></button>
+      <div class="page">{{ currentPage }}</div>
+      <button
+        *ngIf="paginatedData.hasNextPage"
+        (click)="goToPage(nextPage)"
+        type="button"
+        class="btn_next"
+      ></button>
+    </div>
+  </main>
+  <div class="sidenav">
+    <h2>Фильтры</h2>
+    <app-sidenav (searchValue)="search$.next($event)"></app-sidenav>
+  </div>
+</div>

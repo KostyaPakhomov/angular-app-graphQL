@@ -1,0 +1,66 @@
+<form [formGroup]="form">
+  <div class="search_input" id="search">
+    <input
+      mask="0000000000"
+      #input
+      class="input"
+      placeholder="Unit price"
+      [class.focus]="isOnFocus"
+      (focus)="isOnFocus = true"
+      (blur)="isOnFocus = false"
+      type="text"
+      [formControl]="search"
+      (ngModelChange)="searchValue.next(input.value)"
+    />
+    <div *ngIf="search.value" class="placeholder">Unit price</div>
+  </div>
+  <div class="multiselect" id="supplier">
+    <div class="selectBox" [class.expanded]="expanded">
+      <span
+        class="placeholder"
+        [class.hasValue]="form.get('supplierID')?.value.includes(true)"
+        >Supplier</span
+      >
+      <span class="check_count">{{
+        queryParamMap.getAll('supplierID').length > 0
+          ? 'Выбраны ' + queryParamMap.getAll('supplierID').length
+          : ''
+      }}</span>
+    </div>
+    <div id="checkboxes" formArrayName="supplierID">
+      <ng-container *ngFor="let supplier of suppliersTypes; let i = index">
+        <label [for]="supplier.id">
+          <input
+            #inp
+            type="checkbox"
+            name="supplier"
+            [id]="supplier.id"
+            [value]="supplier.id"
+            [checked]="form.get('supplierID')?.value[i] === supplier.id"
+            formControlName="{{ i }}"
+          />{{ supplier.display_name }}</label
+        >
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="category_container">
+    <p class="category_label">Category</p>
+
+    <div id="category">
+      <div
+        class="category_values"
+        (click)="form.get('categoryID')?.setValue(category.id)"
+        *ngFor="let category of categoriesTypes"
+      >
+        <input
+          type="radio"
+          [id]="category.id"
+          formControlName="categoryID"
+          [value]="category.id"
+        />
+        <span class="category_name">{{ category.display_name }}</span>
+      </div>
+    </div>
+  </div>
+</form>

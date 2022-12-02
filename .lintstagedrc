@@ -1,0 +1,11 @@
+{
+  "*.html": "npm run linthtml",
+  "*.css": [
+    "stylelint --fix"
+  ],
+  "*.scss": [
+    "stylelint '**/*.scss' --fix"
+  ],
+  "*.{js,ts}": "eslint --fix",
+  "*.{js,ts,css,scss,md}": "prettier --write"
+}

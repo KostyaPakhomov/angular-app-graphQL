@@ -1,0 +1,120 @@
+{
+  "root": true,
+  "ignorePatterns": ["dist"],
+  "plugins": ["unused-imports"],
+  "rules": {
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "@angular-eslint/component-max-inline-declarations": [
+          "error",
+          {
+            "animations": 2,
+            "styles": 5,
+            "template": 5
+          }
+        ],
+        "@angular-eslint/no-input-prefix": [
+          "error",
+          {
+            "prefixes": ["can", "is", "should"]
+          }
+        ],
+        "@angular-eslint/no-queries-metadata-property": "error",
+        "@angular-eslint/relative-url-prefix": "error",
+        "@angular-eslint/use-component-view-encapsulation": "error",
+        "@typescript-eslint/await-thenable": "error",
+        "@typescript-eslint/ban-ts-comment": [
+          "error",
+          {
+            "ts-expect-error": "allow-with-description",
+            "ts-ignore": "allow-with-description",
+            "ts-nocheck": "allow-with-description",
+            "ts-check": "allow-with-description",
+            "minimumDescriptionLength": 3
+          }
+        ],
+        "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/explicit-member-accessibility": [
+          "error",
+          {
+            "accessibility": "no-public"
+          }
+        ],
+        "@typescript-eslint/no-extraneous-class": "off",
+        "@typescript-eslint/no-for-in-array": "error",
+        "@typescript-eslint/no-require-imports": "error",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-this-alias": "error",
+        "@typescript-eslint/require-await": "error",
+        "@typescript-eslint/naming-convention": "off",
+        "id-blacklist": "off",
+        "id-denylist": "off",
+        "max-lines": ["warn", 500],
+        "no-duplicate-case": "error",
+        "no-extra-bind": "error",
+        "prefer-arrow/prefer-arrow-functions": "off",
+        "no-param-reassign": "off",
+        "@typescript-eslint/no-shadow": "off",
+        "no-redeclare": "error",
+        "no-return-await": "error",
+        "no-sequences": "error",
+        "no-sparse-arrays": "error",
+        "no-debugger": "error",
+        "no-underscore-dangle": [
+          "error",
+          {
+            "allowAfterThis": true,
+            "allowAfterSuper": true,
+            "allowFunctionParams": false
+          }
+        ],
+        "no-template-curly-in-string": "error",
+        "@typescript-eslint/no-unused-expressions": [
+          "error",
+          {
+            "allowTernary": true,
+            "allowTaggedTemplates": true
+          }
+        ],
+        "prefer-object-spread": "error",
+        "require-await": "error"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {
+        "@angular-eslint/template/conditional-complexity": [
+          "error",
+          {
+            "maxComplexity": 4
+          }
+        ],
+        "@angular-eslint/template/no-any": "off",
+        "@angular-eslint/template/no-autofocus": "off"
+      }
+    }
+  ]
+}

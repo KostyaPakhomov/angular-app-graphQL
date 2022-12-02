@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  uri: 'https://graphql-compose.herokuapp.com/northwind/',
 };

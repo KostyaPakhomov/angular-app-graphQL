@@ -1,0 +1,17 @@
+<div class="page_container">
+  <div class="page_wrapper">
+    <h2>{{ item?.name! }}</h2>
+    <button type="button" (click)="goBack()">back</button>
+    <div>
+      {{ item?.unitPrice! }}
+      {{ item?.productID! }}
+      {{ item?.supplier?.companyName! }}
+      {{ item?.supplier?.supplierID! }}
+      {{ item?.supplier?.address?.city! }}
+
+      {{ item?.category?.name! }}
+      {{ item?.category?.categoryID! }}
+      {{ item?.category?.description! }}
+    </div>
+  </div>
+</div>

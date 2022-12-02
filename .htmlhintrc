@@ -1,0 +1,11 @@
+{
+  "attr-no-duplication": true,
+  "attr-value-double-quotes": true,
+  "id-class-ad-disabled": true,
+  "inline-script-disabled": true,
+  "inline-style-disabled": true,
+  "src-not-empty": true,
+  "style-disabled": true,
+  "tag-pair": true,
+  "tagname-lowercase": true
+}
