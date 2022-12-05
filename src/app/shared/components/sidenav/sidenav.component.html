@@ -1,65 +1,138 @@
 <form [formGroup]="form">
   <div class="search_input" id="search">
     <input
-      mask="0000000000"
       #input
       class="input"
-      placeholder="Unit price"
+      placeholder="Имя"
       [class.focus]="isOnFocus"
       (focus)="isOnFocus = true"
       (blur)="isOnFocus = false"
       type="text"
       [formControl]="search"
-      (ngModelChange)="searchValue.next(input.value)"
+      (ngModelChange)="searchInput(input.value)"
     />
-    <div *ngIf="search.value" class="placeholder">Unit price</div>
+    <div *ngIf="search.value" class="placeholder">Имя</div>
   </div>
-  <div class="multiselect" id="supplier">
+  <div class="multiselect" id="character">
     <div class="selectBox" [class.expanded]="expanded">
       <span
         class="placeholder"
-        [class.hasValue]="form.get('supplierID')?.value.includes(true)"
-        >Supplier</span
+        [class.hasValue]="form.get('character')?.value.includes(true)"
+        >Персонаж</span
       >
       <span class="check_count">{{
-        queryParamMap.getAll('supplierID').length > 0
-          ? 'Выбраны ' + queryParamMap.getAll('supplierID').length
+        queryParamMap.getAll('character').length > 0
+          ? 'Выбраны ' + queryParamMap.getAll('character').length
           : ''
       }}</span>
     </div>
-    <div id="checkboxes" formArrayName="supplierID">
-      <ng-container *ngFor="let supplier of suppliersTypes; let i = index">
-        <label [for]="supplier.id">
+    <div id="checkboxes" formArrayName="character">
+      <ng-container *ngFor="let character of charactersTypes; let i = index">
+        <label [for]="character.id">
           <input
             #inp
             type="checkbox"
-            name="supplier"
-            [id]="supplier.id"
-            [value]="supplier.id"
-            [checked]="form.get('supplierID')?.value[i] === supplier.id"
+            name="character"
+            [id]="character.id"
+            [value]="character.id"
             formControlName="{{ i }}"
-          />{{ supplier.display_name }}</label
-        >
+            class="checkbox"
+          />{{ character.display_name }}
+
+          <svg
+            class="check_img"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            *ngIf="inp.checked; else unchecked"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM7 14L2 9.19231L3.4 7.84615L7 11.3077L14.6 4L16 5.34615L7 14Z"
+              fill="#2962FF"
+            />
+          </svg>
+          <ng-template #unchecked>
+            <svg
+              class="check_img"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M16 2V16H2V2H16ZM16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0Z"
+                fill="black"
+                fill-opacity="0.54"
+              />
+            </svg>
+          </ng-template>
+        </label>
       </ng-container>
     </div>
   </div>
 
-  <div class="category_container">
-    <p class="category_label">Category</p>
+  <div class="gender_container">
+    <p class="gender_label">Пол</p>
 
-    <div id="category">
+    <div id="gender">
       <div
-        class="category_values"
-        (click)="form.get('categoryID')?.setValue(category.id)"
-        *ngFor="let category of categoriesTypes"
+        class="gender_values"
+        (click)="form.get('gender')?.setValue(gender.name)"
+        *ngFor="let gender of genderTypes; let i = index"
       >
         <input
           type="radio"
-          [id]="category.id"
-          formControlName="categoryID"
-          [value]="category.id"
+          [id]="gender.name"
+          formControlName="gender"
+          [value]="gender.name"
         />
-        <span class="category_name">{{ category.display_name }}</span>
+        <svg
+          class="radio_check_btn"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          *ngIf="
+            form.get('gender')?.value === gender.name ||
+              (!form.get('gender')?.value && i === 0);
+            else unchecked
+          "
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M10 5C7.2 5 5 7.2 5 10C5 12.8 7.2 15 10 15C12.8 15 15 12.8 15 10C15 7.2 12.8 5 10 5ZM10 0C4.5 0 0 4.5 0 10C0 15.5 4.5 20 10 20C15.5 20 20 15.5 20 10C20 4.5 15.5 0 10 0ZM10 18C5.6 18 2 14.4 2 10C2 5.6 5.6 2 10 2C14.4 2 18 5.6 18 10C18 14.4 14.4 18 10 18Z"
+            fill="#2962FF"
+          />
+        </svg>
+        <ng-template #unchecked>
+          <svg
+            class="radio_check_btn"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M10 0C4.5 0 0 4.5 0 10C0 15.5 4.5 20 10 20C15.5 20 20 15.5 20 10C20 4.5 15.5 0 10 0ZM10 18C5.6 18 2 14.4 2 10C2 5.6 5.6 2 10 2C14.4 2 18 5.6 18 10C18 14.4 14.4 18 10 18Z"
+              fill="black"
+              fill-opacity="0.54"
+            />
+          </svg>
+        </ng-template>
+
+        <span class="gender_name">{{ gender.display_name }}</span>
       </div>
     </div>
   </div>

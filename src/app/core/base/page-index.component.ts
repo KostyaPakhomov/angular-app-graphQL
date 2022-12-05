@@ -6,6 +6,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CharactersPagination } from 'Core/models';
+import { HandlerErrorService } from 'Core/services';
 import { Subject } from 'rxjs';
 import {
   debounceTime,
@@ -14,17 +16,14 @@ import {
   skip,
 } from 'rxjs/operators';
 import { trackByFn } from '../helpers';
-import { ProductPagination } from '../models';
 import { DataService } from './data.service';
 import { Item } from './item';
 
 export interface FilterValues {
   page?: string;
-  perPage?: number;
-  search?: number;
-  supplierID?: number;
-  categoryID?: number;
-  OR?: any;
+  search?: string;
+  gender?: string;
+  character?: number[];
 }
 @UntilDestroy()
 @Injectable()
@@ -32,27 +31,25 @@ export abstract class PageIndexComponent<T, K extends Item>
   implements OnInit, OnDestroy
 {
   readonly trackByFn = trackByFn;
-  paginatedData: ProductPagination<T, K> = {} as ProductPagination<T, K>;
-  // TODO Change type
+  paginatedData: CharactersPagination<T, K> = {} as CharactersPagination<T, K>;
   isLoading = false;
   protected hasPagination = false;
   private _items: K[] = [];
   search$: Subject<string> = new Subject();
   index = 1;
-  searchParams!: string | null;
   isSearching = false;
   count = 0;
-  perPageValue = 5;
+  isError: boolean = false;
 
   get items(): K[] {
     if (this.hasPagination) {
-      return this.paginatedData?.items!;
+      return this.paginatedData?.results!;
     }
     return this._items;
   }
   set items(value: K[]) {
     if (this.hasPagination) {
-      this.paginatedData.items! = value;
+      this.paginatedData.results! = value;
     }
     this._items = value;
   }
@@ -66,29 +63,28 @@ export abstract class PageIndexComponent<T, K extends Item>
       : this.index;
   }
 
-  get perPage(): number {
-    return this.perPageValue;
-  }
-  get prevPage(): number {
-    return this.index - 1;
-  }
-  get nextPage(): number {
-    return this.index + 1;
-  }
   get lastPage(): number {
-    return Math.ceil(this.paginatedData.count / this.perPage);
+    return this.paginatedData.info.pages!;
+  }
+  get totalCount(): number {
+    return this.paginatedData.info.count!;
   }
 
   constructor(
     protected dataService: DataService<T, K>,
     protected route: ActivatedRoute,
     protected router: Router,
-    protected cdRef: ChangeDetectorRef
+    protected cdRef: ChangeDetectorRef,
+    protected error: HandlerErrorService
   ) {}
 
   // eslint-disable-next-line @angular-eslint/contextual-lifecycle
   ngOnInit(): void {
     this.subscribeToQueryParamsChange();
+    this.error.$error.subscribe(res => {
+      this.isError = true;
+      this.items = [];
+    });
   }
 
   goToPage(index: number) {
@@ -100,8 +96,8 @@ export abstract class PageIndexComponent<T, K extends Item>
       queryParamsHandling: 'merge',
       replaceUrl: true,
     });
-    this.cdRef.detectChanges();
     this.index = index;
+    this.cdRef.detectChanges();
   }
 
   search() {
@@ -116,11 +112,11 @@ export abstract class PageIndexComponent<T, K extends Item>
         if (!this.items) {
           return;
         }
+        this.isSearching = true;
         this.router.navigate([], {
           relativeTo: this.route,
           queryParams: {
             search: res || null,
-            page: 1,
           },
           queryParamsHandling: 'merge',
           replaceUrl: true,
@@ -141,26 +137,17 @@ export abstract class PageIndexComponent<T, K extends Item>
    * @description data object for sending at server after query params change
    */
   protected preparedQueryParams(params: Params): Params {
-    const countItems = { perPage: this.perPage };
-
-    const newParams = Object.assign(countItems, { ...params });
+    const newParams = { ...params };
     Object.keys(newParams).forEach(el => {
       newParams[el] = !isNaN(Number(newParams[el]))
         ? Number(newParams[el])
         : newParams[el];
-      if (newParams[el] === 0 || newParams[el] === '') {
-        delete newParams[el];
-      }
       if (Array.isArray(newParams[el])) {
-        newParams['OR'] = newParams[el].map((res: any, i: number) => {
-          return { supplierID: Number(newParams[el][i]) };
+        newParams[el].forEach((res: any, i: number) => {
+          newParams[el][i] = Number(newParams[el][i]);
         });
-        console.log(newParams, 'create OR');
-
-        delete newParams[el];
       }
     });
-
     return { ...newParams };
   }
 
@@ -176,7 +163,35 @@ export abstract class PageIndexComponent<T, K extends Item>
         })
       )
       .subscribe(res => {
-        this.items = res;
+        this.index = 1;
+        this.isSearching = false;
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {
+            page: 1,
+          },
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        });
+        this.isError = false;
+        let resArr = [...res];
+        Object.keys(params!).forEach(param => {
+          if (param !== 'page' && param !== 'character') {
+            if (param === 'gender') {
+              resArr = res.filter(
+                (el: any) =>
+                  el[param].toLowerCase() === params![param].toLowerCase()
+              );
+            } else {
+              resArr = res.filter((el: any) =>
+                el[param === 'search' ? 'name' : param]
+                  .toLowerCase()
+                  .includes(params![param].toLowerCase())
+              );
+            }
+          }
+        });
+        this.items = resArr;
       });
   }
 
@@ -194,7 +209,7 @@ export abstract class PageIndexComponent<T, K extends Item>
       )
       .subscribe(res => {
         if (this.isSearching) {
-          this.index = 0;
+          this.index = 1;
           this.isSearching = false;
           this.router.navigate([], {
             relativeTo: this.route,
@@ -205,12 +220,27 @@ export abstract class PageIndexComponent<T, K extends Item>
             replaceUrl: true,
           });
         }
+        this.isError = false;
         this.paginatedData = res;
       });
   }
 
   private subscribeToQueryParamsChange() {
     this.route.queryParams.subscribe(params => {
+      const currentParams = { ...params };
+      Object.keys(currentParams).forEach(el => {
+        if (
+          currentParams[el] === 0 ||
+          currentParams[el] === '' ||
+          currentParams[el].length === 0
+        ) {
+          delete currentParams[el];
+        }
+      });
+      this.hasPagination = Object.keys(currentParams).includes('character')
+        ? false
+        : true;
+
       if (!this.hasPagination) {
         this.loadItems(this.preparedQueryParams(params));
       } else {

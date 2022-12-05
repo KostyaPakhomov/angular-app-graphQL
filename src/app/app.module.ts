@@ -5,10 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { HandlerErrorService } from 'Core/services';
-
-export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,7 +14,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgxMaskModule.forRoot(),
   ],
   providers: [
     {

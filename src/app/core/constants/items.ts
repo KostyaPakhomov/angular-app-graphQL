@@ -1,126 +1,48 @@
 import { gql } from 'apollo-angular';
 
-export const itemsQuery: any = gql`
-  query load(
-    $page: Int
-    $perPage: Int
-    $unitPrice: Float
-    $supplierID: Float
-    $categoryID: Float
-    $OR: [FilterFindManyProductInput!]
-  ) {
-    viewer {
-      productPagination(
-        page: $page
-        perPage: $perPage
-        filter: {
-          unitPrice: $unitPrice
-          categoryID: $categoryID
-          OR: $OR
-          supplierID: $supplierID
-        }
-      ) {
-        items {
-          name
-          unitPrice
-          quantityPerUnit
-          productID
-          supplier {
-            companyName
-            supplierID
-            address {
-              country
-              city
-              region
-              street
-              postalCode
-              phone
-            }
-          }
-          category {
-            name
-            categoryID
-            description
-          }
-        }
-        count
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-      }
-    }
-  }
-`;
-
-export const loadProducts = gql`
-  query load(
-    $page: Int
-    $perPage: Int
-    $unitPrice: Float
-    $supplierID: Float
-    $categoryID: Float
-    $OR: [FilterFindManyProductInput!]
-  ) {
-    viewer {
-      productPagination(
-        page: $page
-        perPage: $perPage
-        filter: {
-          unitPrice: $unitPrice
-          categoryID: $categoryID
-          OR: $OR
-          supplierID: $supplierID
-        }
-      ) {
-        items {
-          name
-          unitPrice
-          productID
-          supplier {
-            companyName
-            supplierID
-          }
-          category {
-            name
-            categoryID
-          }
-        }
-        count
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-      }
-    }
-  }
-`;
-
-export const loadOneProduct = gql`
-  query load($productID: Float) {
-    viewer {
-      product(filter: { productID: $productID }) {
+export const loadCharacters = gql`
+  query load($page: Int, $name: String, $gender: String) {
+    characters(page: $page, filter: { name: $name, gender: $gender }) {
+      results {
         name
-        unitPrice
-        quantityPerUnit
-        productID
-        supplier {
-          companyName
-          supplierID
-          address {
-            country
-            city
-            region
-            street
-            postalCode
-            phone
-          }
-        }
-        category {
-          name
-          categoryID
-          description
-        }
+        id
+        gender
+        species
+      }
+      info {
+        count
+        pages
+        next
+        prev
+      }
+    }
+  }
+`;
+
+export const loadCharactersByIds = gql`
+  query load($ids: [ID!]!) {
+    charactersByIds(ids: $ids) {
+      name
+      id
+      gender
+      species
+    }
+  }
+`;
+
+export const loadOneCharacter = gql`
+  query load($id: ID!) {
+    character(id: $id) {
+      name
+      id
+      image
+      gender
+      species
+      status
+      type
+      created
+      origin {
+        name
       }
     }
   }
