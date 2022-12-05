@@ -8,8 +8,8 @@
       (focus)="isOnFocus = true"
       (blur)="isOnFocus = false"
       type="text"
+      (keypress)="keyPressAlphaSpace($event)"
       [formControl]="search"
-      (ngModelChange)="searchInput(input.value)"
     />
     <div *ngIf="search.value" class="placeholder">Имя</div>
   </div>

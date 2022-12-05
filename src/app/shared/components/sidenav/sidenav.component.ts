@@ -95,16 +95,33 @@ export class SidenavComponent implements OnInit {
       this.router.navigate([], {
         queryParams: {
           ...value,
+          page: 1
         },
         queryParamsHandling: 'merge',
         replaceUrl: true,
       });
     });
+
+    this.searchChanging();
   }
 
-  searchInput(value: string) {
-    this.searchValue.emit(value);
+  searchChanging() {
+    this.search.valueChanges.subscribe(res => {
+      const text = res.trim();
+      this.searchValue.emit(text);
+    });
   }
+  keyPressAlphaSpace(event: any) {
+    var inp = String.fromCharCode(event.keyCode);
+
+    if (/^[a-zA-Z\s]*$/.test(inp)) {
+      return true;
+    } else {
+      event.preventDefault();
+      return false;
+    }
+  }
+
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
     const id = document.getElementById('character');
