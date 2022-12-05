@@ -70,6 +70,16 @@ select {
   font: inherit;
 }
 
+button {
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
 /* Удаляем все анимации и переходы для людей, которые предпочитай их не использовать */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -81,7 +91,7 @@ select {
 }
 
 * {
-  caret-color: #347CFF;
+  caret-color: $caretColor;
   scrollbar-width: thin;
 }
 
@@ -98,13 +108,12 @@ select {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #9b9fab;
+  background: $gray;
   border-radius: 0.5rem;
   z-index: 7;
 }
 
 .error {
-  // padding: 5rem 15rem;
   position: fixed;
   bottom: 5%;
   left: 50%;
@@ -112,34 +121,41 @@ select {
   min-width: 40rem;
   max-width: 50rem;
   min-height: 10rem;
-  box-shadow: 0.3rem 0.3rem 1rem 0.01rem #9b9fab;
+  box-shadow: 0.3rem 0.3rem 1rem 0.01rem $gray;
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  // background: $redLight;
   background: $backError;
   animation-name: example;
   animation-duration: 0.5s;
-  h2{
+
+  h2 {
     font: 500 1.8rem/2.2rem $roboto-font;
     margin-bottom: 0.75rem;
     color: $red;
   }
-  .error_type_text{
+
+  .error_type_text {
     font: 500 1.6rem/2rem $roboto-font;
-    color: #000;
+    color: $mainBlack;
     margin-bottom: 0.5rem;
   }
-  .error_text{
+
+  .error_text {
     font: 400 1.6rem/2rem $roboto-font;
-    color: #000;
+    color: $mainBlack;
   }
 }
 
 @keyframes example {
-  0%   {opacity: 0;}
-  100% {opacity: 1;}
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

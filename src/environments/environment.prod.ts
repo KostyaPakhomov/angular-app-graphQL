@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  uri: 'https://graphql-compose.herokuapp.com/northwind/',
+  uri: 'https://rickandmortyapi.com/graphql',
 };

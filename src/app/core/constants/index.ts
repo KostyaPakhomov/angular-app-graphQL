@@ -1,3 +1,3 @@
 export * from './items';
-export * from './suppliers';
-export * from './categories';
+export * from './characters';
+export * from './gender';

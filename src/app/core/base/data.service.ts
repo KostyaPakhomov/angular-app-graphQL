@@ -1,10 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Type } from '@angular/core';
-import { Apollo, QueryRef } from 'apollo-angular';
-import { itemsQuery, loadOneProduct, loadProducts } from 'Core/constants/items';
+import { Apollo } from 'apollo-angular';
+import {
+  loadCharacters,
+  loadCharactersByIds,
+  loadOneCharacter,
+} from 'Core/constants/items';
 import { HandlerErrorService } from 'Core/services/handlerError.service';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Pagination, ProductPagination } from '../models/pagination';
+import { catchError, map } from 'rxjs/operators';
+import { CharactersPagination, Pagination } from '../models/pagination';
 import { FilterValues } from './page-index.component';
 
 @Injectable()
@@ -17,62 +21,51 @@ export abstract class DataService<T, K> {
     private apollo: Apollo,
     private errorService: HandlerErrorService
   ) {}
-  itemsQueryRef: QueryRef<Pagination<T, K>> = this.apollo.watchQuery({
-    query: itemsQuery,
-  });
 
   index(params?: Record<string, any>) {
-    return this.apollo
-      .query<T[]>({
-        query: loadOneProduct,
-        variables: { params },
-      })
-      .pipe(
-        map(response => response?.data.map(item => new this.ctor(item))),
-        catchError(this.errorService.handleError)
-      );
-  }
+    let { character }: FilterValues = params!;
 
-  indexPaginated(params?: Record<string, any>) {
-    let { page, perPage, categoryID, supplierID, search, OR }: FilterValues =
-      params!;
     return this.apollo
       .query<Pagination<T, K>>({
-        query: loadProducts,
-        variables: {
-          page,
-          perPage,
-          categoryID,
-          supplierID,
-          unitPrice: search,
-          OR,
-        },
+        query: loadCharactersByIds,
+        variables: { ids: character },
       })
       .pipe(
-        map(
-          response =>
-            new ProductPagination(
-              response?.data!.viewer.productPagination,
-              this.ctor
-            )
+        map(response =>
+          response?.data.charactersByIds.map(item => new this.ctor(item))
         ),
         catchError(this.errorService.handleError)
       );
   }
 
-  refetch(data?: Pagination<T, K>) {
-    this.itemsQueryRef.refetch(data);
-  }
-
-  show(productID: number) {
+  indexPaginated(params?: Record<string, any>) {
+    let { page, gender, search }: FilterValues = params!;
     return this.apollo
       .query<Pagination<T, K>>({
-        query: loadOneProduct,
-        variables: { productID },
+        query: loadCharacters,
+        variables: {
+          page,
+          name: search,
+          gender,
+        },
       })
       .pipe(
-        tap(res => console.log(res)),
-        map(response => new this.ctor(response.data.viewer.product)),
+        map(
+          response =>
+            new CharactersPagination(response?.data!.characters, this.ctor)
+        ),
+        catchError(this.errorService.handleError)
+      );
+  }
+
+  show(id: number) {
+    return this.apollo
+      .query<Pagination<T, K>>({
+        query: loadOneCharacter,
+        variables: { id },
+      })
+      .pipe(
+        map(response => new this.ctor(response.data.character)),
         catchError(this.errorService.handleError)
       );
   }
