@@ -1,6 +1,6 @@
 export abstract class Item {
   isLoading!: boolean;
-  abstract productID: number;
+  abstract id: number;
 
   constructor(data: any) {
     Object.assign(this, data);

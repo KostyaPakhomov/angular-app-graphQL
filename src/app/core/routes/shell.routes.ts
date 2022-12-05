@@ -1,9 +1,9 @@
 export enum ShellRoute {
-  PRODUCTS = 'products',
+  CHARACTERS = 'characters',
 }
 
 export const shellRoutes = {
-  PRODUCTS: `${ShellRoute.PRODUCTS}`,
+  CHARACTERS: `${ShellRoute.CHARACTERS}`,
 };
 
 Object.freeze(shellRoutes);

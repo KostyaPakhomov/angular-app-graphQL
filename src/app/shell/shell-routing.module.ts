@@ -8,11 +8,11 @@ const routes: Routes = [
     path: '',
     component: ShellComponent,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: `${shellRoutes.PRODUCTS}` },
+      { path: '', pathMatch: 'full', redirectTo: `${shellRoutes.CHARACTERS}` },
       {
-        path: shellRoutes.PRODUCTS,
+        path: shellRoutes.CHARACTERS,
         loadChildren: () =>
-          import('Modules/products/products.module').then(
+          import('Modules/characters/characters.module').then(
             m => m.ProductsModule
           ),
       },

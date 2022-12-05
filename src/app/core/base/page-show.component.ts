@@ -1,5 +1,4 @@
 import { Location } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   ElementRef,
@@ -79,30 +78,8 @@ export abstract class PageShowComponent<T, K extends Item>
         next: res => {
           this.item = res;
         },
-        error: (err: HttpErrorResponse) => {
-          this.isLoadingFailed = true;
-          // this.handleError(err);
-        },
       });
   }
-
-  scrollContentToTop(): void {
-    if (this.pageContent?.nativeElement) {
-      this.pageContent.nativeElement.scrollTop = 0;
-    }
-  }
-
-  // protected handleError(err: HttpErrorResponse): void {
-  //   if (err.status === 422) {
-  //     handleFormHttpError(this.form, err);
-
-  //     for (const value of Object.values(err.error.errors)) {
-  //       const errorValue = Array.isArray(value) ? value.join(', ') : value;
-  //     }
-  //   } else {
-  //     throw err;
-  //   }
-  // }
 
   goBack(): void {
     this.location.back();

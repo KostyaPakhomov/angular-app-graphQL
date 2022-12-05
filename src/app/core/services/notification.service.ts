@@ -21,15 +21,14 @@ export class NotificationService {
     divError.appendChild(errorText);
     document.body.appendChild(divError);
     setTimeout(() => {
-        divError.style.opacity = '0';
-        divError.style.transition = '500ms';
-        this.removeElement(divError);
-    //   document.body.removeChild(divError);
+      divError.style.opacity = '0';
+      divError.style.transition = '500ms';
+      this.removeElement(divError);
     }, 2000);
   }
-  removeElement(htmlElement: HTMLElement){
-      setTimeout(() => {
-          document.body.removeChild(htmlElement);
-      }, 500);
+  removeElement(htmlElement: HTMLElement) {
+    setTimeout(() => {
+      document.body.removeChild(htmlElement);
+    }, 500);
   }
 }

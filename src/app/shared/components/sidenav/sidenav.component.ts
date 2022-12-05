@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { suppliersTypes } from 'Core/constants';
-import { categoriesTypes } from 'Core/constants/categories';
+import { charactersTypes } from 'Core/constants/characters';
+import { genderTypes } from 'Core/constants/gender';
 
 @Component({
   selector: 'app-sidenav',
@@ -19,8 +19,8 @@ export class SidenavComponent implements OnInit {
   isOnFocus = false;
   form!: FormGroup;
   search = new FormControl([null]);
-  readonly suppliersTypes = suppliersTypes;
-  readonly categoriesTypes = categoriesTypes;
+  readonly charactersTypes = charactersTypes;
+  readonly genderTypes = genderTypes;
   get queryParamMap(): ParamMap {
     return this.route.snapshot.queryParamMap;
   }
@@ -33,25 +33,23 @@ export class SidenavComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
   getFormsControls(): FormArray {
-    return this.form.controls['supplierID'] as FormArray;
+    return this.form.controls['character'] as FormArray;
   }
   ngOnInit(): void {
     this.form = this.fb.group({
-      supplierID: this.fb.array([]),
+      character: this.fb.array([]),
 
-      categoryID: [null],
+      gender: [null],
     });
 
-    this.suppliersTypes.forEach(el => {
-      (<FormArray>this.form.controls['supplierID']).push(
-        new FormControl(false)
-      );
+    this.charactersTypes.forEach(el => {
+      (<FormArray>this.form.controls['character']).push(new FormControl(false));
     });
-    const checkboxes = document.querySelectorAll('input[name="supplier"]');
+    const checkboxes = document.querySelectorAll('input[name="character"]');
 
     checkboxes.forEach((checkbox: any, index: number) => {
       checkbox.checked = this.queryParamMap
-        .getAll('supplierID')
+        .getAll('character')
         .includes(checkbox.value)
         ? true
         : false;
@@ -59,15 +57,16 @@ export class SidenavComponent implements OnInit {
 
     this.route.queryParamMap.subscribe(params => {
       this.search.patchValue(params.get('search'));
+      let charactersIds = params.getAll('character').map(el => {
+        return Number(el);
+      });
       this.form.patchValue(
         {
-          supplierID: this.suppliersTypes.map(el => {
-            return params.getAll('supplierID').includes(el.id.toString())
-              ? true
-              : false;
+          character: this.charactersTypes.map(el => {
+            return charactersIds.includes(el.id) ? true : false;
           }),
 
-          categoryID: Number(params.get('categoryID')),
+          gender: params.get('gender'),
         },
         {
           emitEvent: false,
@@ -77,7 +76,7 @@ export class SidenavComponent implements OnInit {
 
     this.form.valueChanges.subscribe(value => {
       let checkedBoxes = document.querySelectorAll(
-        'input[name="supplier"]:checked'
+        'input[name="character"]:checked'
       );
       let values: any[] = [];
       checkedBoxes.forEach((checkbox: any) => {
@@ -96,24 +95,41 @@ export class SidenavComponent implements OnInit {
       this.router.navigate([], {
         queryParams: {
           ...value,
+          page: 1
         },
         queryParamsHandling: 'merge',
         replaceUrl: true,
       });
     });
+
+    this.searchChanging();
   }
 
-  searchInput(value: string) {
-    this.searchValue.emit(value);
+  searchChanging() {
+    this.search.valueChanges.subscribe(res => {
+      const text = res.trim();
+      this.searchValue.emit(text);
+    });
   }
+  keyPressAlphaSpace(event: any) {
+    var inp = String.fromCharCode(event.keyCode);
+
+    if (/^[a-zA-Z\s]*$/.test(inp)) {
+      return true;
+    } else {
+      event.preventDefault();
+      return false;
+    }
+  }
+
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
-    const id = document.getElementById('supplier');
+    const id = document.getElementById('character');
     const checkboxes = document.getElementById('checkboxes');
 
     if (
       !id!.contains(event.target as HTMLElement) &&
-      (event.target as HTMLElement).id !== 'supplier'
+      (event.target as HTMLElement).id !== 'character'
     ) {
       checkboxes!.classList.remove('active');
       this.expanded = false;

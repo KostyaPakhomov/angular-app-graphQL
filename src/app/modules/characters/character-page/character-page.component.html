@@ -1,0 +1,71 @@
+<div class="page_container">
+  <button class="go_back" type="button" (click)="goBack()">
+    <span class="btn_arrow">
+      <svg
+        width="10"
+        height="10"
+        viewBox="0 0 10 10"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M9.66667 4.41665L2.5675 4.41665L5.82834 1.15581L5 0.333313L0.333336 4.99998L5 9.66665L5.8225 8.84415L2.5675 5.58331L9.66667 5.58331V4.41665Z"
+          fill="#2962FF"
+        />
+      </svg>
+    </span>
+    <span class="btn_text"> Вернуться </span>
+  </button>
+
+  <div class="page_content" *ngIf="!isLoading; else loading">
+    <h2>{{ item?.name! }}</h2>
+    <main>
+      <div class="gender">
+        <span class="label">Пол</span>
+        <span class="value">{{ item.gender ? item.gender : '&mdash;' }}</span>
+      </div>
+      <div class="species">
+        <span class="label">Вид</span>
+        <span class="value">{{ item.species ? item.species : '&mdash;' }}</span>
+      </div>
+      <div class="status">
+        <span class="label">Статус</span>
+        <span class="value">{{ item.status ? item.status : '&mdash;' }}</span>
+      </div>
+      <div class="type">
+        <span class="label">Тип</span>
+        <span class="value">{{ item.type ? item.type : '&mdash;' }}</span>
+      </div>
+      <div class="origin">
+        <span class="label">Происхождение</span>
+        <span class="value">{{
+          item.origin.name ? item.origin.name : '&mdash;'
+        }}</span>
+      </div>
+
+      <div class="created">
+        <span class="label">Дата создания</span>
+        <span class="value">{{
+          item.created ? (item.created | date : 'dd.MM.yyyy') : '&mdash;'
+        }}</span>
+      </div>
+      <div class="image">
+        <span class="label">Изображение</span>
+        <div
+          class="value"
+          [ngStyle]="{
+            background: 'url(' + item.image + ') left center no-repeat',
+            backgroundSize: 'contain'
+          }"
+        ></div>
+      </div>
+    </main>
+  </div>
+  <ng-template #loading>
+    <div class="loading">
+      <app-loading style="display: inline-flex"></app-loading>
+    </div>
+  </ng-template>
+</div>
