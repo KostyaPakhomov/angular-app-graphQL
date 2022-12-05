@@ -1,27 +1,52 @@
 # AppAngularGraphql
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.9.
 
-## Development server
+## SPA-приложение. Описание
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Реализация API через GrapQL
 
-## Code scaffolding
+Реализация списка объектов (логика получения данных и визуальное соответствие макету)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Реализация фильтрации
 
-## Build
+Реализовация пагинации
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Реализация карточки объекта
 
-## Running unit tests
+Сохранение состояния списка
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Возможность переиспользования компонентов
 
-## Running end-to-end tests
+Поддержка IE 11
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Макет
 
-## Further help
+https://www.figma.com/file/cmMduwfg9Brm8ez1mbK6sR/Frontend-Angular?node-id=0%3A1
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Простое Angular приложение, состоящее из двух страниц
+
+Страница со списком сущностей и боковой панелью с фильтрами, карточка сущности
+
+Без использования Bootstrap подобных фреймворков и библиотек компонентов
+
+• Элемент списка
+
+        ◦ Заголовок с названием сущности
+        ◦ Несколько атрибутов
+        ◦ Ссылка на карточку
+        
+• Панель с фильтрами
+
+        ◦ Поиск по названию
+        ◦ Выпадающий список с множественным выбором
+        ◦ Фильтр с радиокнопками
+        
+• Карточка сущности
+
+        ◦ Заголовок с названием сущности
+        ◦ Полный список атрибутов
+        ◦ Ссылка для возвращения к списку
+        
+• Пагинация
+
+• При возвращении к списку состояние  фильтров и пагинации сохраняются
